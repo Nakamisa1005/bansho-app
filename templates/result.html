@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<body>
+    <div class="container">
+        <h1>生成結果</h1>
+        
+        <h2>OCRで抽出されたテキスト</h2>
+        <pre>{{ extracted_text_data }}</pre>
+
+        <h2>AIによる要約・キーワード</h2>
+        <pre>{{ result_text.split('復習問題')[0] | safe }}</pre>
+
+        <h2>復習問題に挑戦！</h2>
+        <div id="quiz-container">
+            {% for quiz in quizzes %}
+            <div class="quiz-item" data-quiz-type="{{ quiz.type }}">
+                <p><strong>問題：{{ quiz.question }}</strong></p>
+                
+                {% if quiz.type == '穴埋め' %}
+                    <input type="text" class="user-answer">
+                    <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
+                {% elif quiz.type == '選択' %}
+                    {% for choice in quiz.choices %}
+                    <label><input type="radio" name="choice-{{ loop.index }}" value="{{ choice }}" class="user-answer"> {{ choice }}</label>
+                    {% endfor %}
+                    <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
+                {% elif quiz.type == '記述' %}
+                    <textarea class="user-answer" rows="4"></textarea>
+                    <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
+                {% endif %}
+
+                <span class="feedback"></span>
+            </div>
+            {% endfor %}
+        </div>
+        <button onclick="checkAnswers()">答え合わせ</button>
+        <a href="/">別の画像で試す</a>
+    </div>
+
+    <script>
+    async function checkAnswers() {
+        const quizItems = document.querySelectorAll('.quiz-item');
+        
+        for (const item of quizItems) {
+            const quizType = item.dataset.quizType;
+            const correctAnswer = item.querySelector('.correct-answer').value;
+            const feedbackSpan = item.querySelector('.feedback');
+            let userAnswer, isCorrect;
+
+            if (quizType === '穴埋め' || quizType === '記述') {
+                const input = item.querySelector('.user-answer');
+                userAnswer = input.value.trim();
+                input.classList.remove('correct', 'incorrect');
+                
+                if (quizType === '記述') {
+                    // 記述問題はAIに採点を依頼
+                    const response = await fetch('/check_descriptive', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            user_answer: userAnswer,
+                            model_answer: correctAnswer
+                        })
+                    });
+                    const data = await response.json();
+                    isCorrect = (data.result === '正解');
+                } else {
+                    // 穴埋め問題は単純比較
+                    isCorrect = (userAnswer === correctAnswer.trim());
+                }
+
+                if (isCorrect) {
+                    input.classList.add('correct');
+                    feedbackSpan.textContent = '✅ 正解！';
+                } else {
+                    input.classList.add('incorrect');
+                    feedbackSpan.textContent = `❌ 不正解 (模範解答: ${correctAnswer})`;
+                }
+
+            } else if (quizType === '選択') {
+                const selected = item.querySelector('.user-answer:checked');
+                userAnswer = selected ? selected.value : '';
+                isCorrect = (userAnswer.trim() === correctAnswer.trim());
+
+                // Reset styles
+                item.querySelectorAll('label').forEach(label => label.style.color = 'black');
+
+                if (isCorrect) {
+                    if (selected) selected.parentElement.style.color = 'green';
+                    feedbackSpan.textContent = '✅ 正解！';
+                } else {
+                    if (selected) selected.parentElement.style.color = 'red';
+                    feedbackSpan.textContent = `❌ 不正解 (正解は: ${correctAnswer})`;
+                }
+            }
+        }
+    }
+    </script>
+</body>
+</html>

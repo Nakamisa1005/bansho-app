@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>板書復習支援アプリ</title>
+</head>
+<body>
+    <h1>板書復習支援アプリ</h1>
+    <p>復習したい画像ファイルをアップロードしてください。</p>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        
+        <div>
+            <label for="tag">科目名・タグ:</label>
+            <input type="text" id="tag" name="tag" placeholder="例：歴史, 数学I" required>
+        </div>
+        <br>
+        <div>
+            <label for="image-upload">画像ファイル:</label>
+            <input type="file" id="image-upload" name="image" required>
+        </div>
+        <br>
+
+        <input type="submit" value="アップロードして要約・問題作成">
+    </form>
+    <a href="/archive">アーカイブ一覧</a>
+</body>
+</html>

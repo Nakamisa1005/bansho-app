@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>科目一覧 - 板書復習支援アプリ</title>
+    </head>
+<body>
+    <div class="container">
+        <h1>科目・タグ一覧</h1>
+        <a href="/"><- トップページに戻る</a>
+
+        <ul>
+            {% for tag in tags %}
+                <li><a href="/archive/{{ tag }}">{{ tag }}</a></li>
+            {% else %}
+                <li>まだ保存されたノートはありません。</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

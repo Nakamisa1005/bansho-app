@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>アーカイブ - 板書復習支援アプリ</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .note-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px;}
+        pre { background-color: #f4f4f4; padding: 15px; white-space: pre-wrap; word-wrap: break-word; border-radius: 5px; }
+        a { display: inline-block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>アーカイブ一覧：{{ tag_name }}</h1> 
+        <a href="/archive"><- 科目一覧に戻る</a>
+        <a href="/"><- トップページに戻る</a>
+
+        {% for note in notes %}
+            <div class="note-card">
+                <h2>抽出されたテキスト</h2>
+                <pre>{{ note.ocr_text }}</pre>
+                <h2>AIによる生成結果</h2>
+                <pre>{{ note.ai_result | safe }}</pre>
+
+                <a href="/note/{{ note.id }}">このノートを編集する</a>
+
+                <form action="/delete_note/{{ note.id }}" method="post" style="display: inline;">
+                    <input type="submit" value="このノートを削除する" onclick="return confirm('本当にこのノートを削除しますか？');">
+                </form>
+
+                <form action="/regenerate_quiz/{{ note.id }}" method="post" style="display: inline;">
+                    <input type="submit" value="問題を再生成する">
+                </form>
+            </div>
+        {% else %}
+            <p>まだ保存されたノートはありません。</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
