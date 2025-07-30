@@ -18,14 +18,16 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'bansho-ocr-app-a38c8bdf8a75.json'
 
 # --- Firestoreデータベースへの接続を取得 ---
-cred = credentials.Certificate("C:/Users/sho0l/bansho/bansho-app-firebase-adminsdk-fbsvc-55e1012ff0.json")
-firebase_admin.initialize_app(cred)
- #Firestoreデータベースへの接続を取得 ---
+firebase_admin.initialize_app()
 db = firestore.client()
 
 
 # --- Gemini APIキーの設定 ---
-genai.configure(api_key="AIzaSyD-NwU9b-24GGDhguZpNYWsDEg7Pz8bGys")
+gemini_api_key = os.environ.get('GEMINI_API_KEY')
+if gemini_api_key:
+    genai.configure(api_key=gemini_api_key)
+else:
+    print("エラー: Gemini APIキーが設定されていません。")
 
 
 # ==============================================================================
