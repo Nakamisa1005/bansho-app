@@ -14,20 +14,24 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-# 認証情報（鍵ファイル）の設定
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'bansho-ocr-app-a38c8bdf8a75.json'
+firebase_cred_path = os.environ.get('FIREBASE_CREDENTIALS_PATH')
+if firebase_cred_path:
+    cred = credentials.Certificate(firebase_cred_path)
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+else:
+    # ローカルで動かす場合など、環境変数がない場合の fallback
+    print("Firebaseの認証情報(環境変数)が見つかりません。")
 
-# --- Firestoreデータベースへの接続を取得 ---
-firebase_admin.initialize_app()
-db = firestore.client()
+# Vision APIの認証は、GOOGLE_APPLICATION_CREDENTIALS 環境変数が設定されていれば
+# クライアント作成時に自動で読み込まれるため、特別なコードは不要です。
 
-
-# --- Gemini APIキーの設定 ---
+# Gemini APIキーの設定
 gemini_api_key = os.environ.get('GEMINI_API_KEY')
 if gemini_api_key:
     genai.configure(api_key=gemini_api_key)
 else:
-    print("エラー: Gemini APIキーが設定されていません。")
+    print("Gemini APIキー(環境変数)が見つかりません。")
 
 
 # ==============================================================================
