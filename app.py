@@ -47,9 +47,11 @@ else:
 def detect_text_with_vision_api(image_path):
     """Google Cloud Vision APIを使って、画像から高精度に文字を検出する関数"""
     client = vision.ImageAnnotatorClient()
+
     with open(image_path, 'rb') as image_file:
         content = image_file.read()
     image = vision.Image(content=content)
+
     response = client.document_text_detection(image=image)
     if response.error.message:
         raise Exception(response.error.message)
@@ -112,12 +114,13 @@ def upload_and_process():
         # 1. アップロードされたファイルを一時保存する
         filename = file.filename
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
 
         # 保存する直前に、フォルダの存在を確認し、なければ作成する
         upload_folder = app.config['UPLOAD_FOLDER']
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)
+
+        file.save(filepath)
 
         # 2. Vision APIでテキストを抽出する
         try:
