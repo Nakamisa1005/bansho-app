@@ -234,7 +234,7 @@ def update_note(note_id):
     })
     
     # 更新後はアーカイブ一覧ページに戻る
-     return redirect(url_for('archive_tags'))
+    return redirect(url_for('archive_tags'))
 
 # ノートを削除するためのルート
 @app.route('/delete_note/<note_id>', methods=['POST'])
