@@ -13,6 +13,12 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+if __name__ == '__main__':
+    # uploadsフォルダがなければ、自動で作成する
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    app.run(debug=True)
+
 
 firebase_cred_path = os.environ.get('FIREBASE_CREDENTIALS_PATH')
 if firebase_cred_path:
@@ -262,7 +268,5 @@ def regenerate_quiz(note_id):
 
 
 if __name__ == '__main__':
-    # uploadsフォルダがなければ、自動で作成する
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
+    # こちらは開発用のサーバー起動のみ
     app.run(debug=True)
