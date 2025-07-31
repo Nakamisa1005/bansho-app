@@ -262,6 +262,7 @@ def regenerate_quiz(note_id):
 
 
 if __name__ == '__main__':
+    # uploadsフォルダがなければ、自動で作成する
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
     app.run(debug=True)
