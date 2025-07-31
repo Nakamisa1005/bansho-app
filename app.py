@@ -114,6 +114,11 @@ def upload_and_process():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
+        # 保存する直前に、フォルダの存在を確認し、なければ作成する
+        upload_folder = app.config['UPLOAD_FOLDER']
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
+
         # 2. Vision APIでテキストを抽出する
         try:
             extracted_text = detect_text_with_vision_api(filepath)
