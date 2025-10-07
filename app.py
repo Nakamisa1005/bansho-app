@@ -66,7 +66,7 @@ def detect_text_with_vision_api(image_path):
     return response.full_text_annotation.text
 
 def generate_study_content_from_text(text):
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-pro')
     prompt = f"""
     あなたは優秀な学習アシスタントです。
     以下のテキストは、学生が撮影したノートや板書の一部です。
