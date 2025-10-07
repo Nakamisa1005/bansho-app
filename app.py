@@ -5,6 +5,9 @@ from firebase_admin import credentials, firestore
 from google.cloud import vision
 import google.generativeai as genai
 import pyrebase # Pyrebaseをインポート
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- Flaskアプリケーションの準備 ---
 app = Flask(__name__)
