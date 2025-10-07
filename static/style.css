@@ -25,18 +25,117 @@ header {
 }
 
 .nav-container {
-    width: 100%;
+    width: 70%;
+    margin: 0 auto;
+    border-bottom: solid 1px #0E6721;
 }
 
 .nav-list {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px; 
+    margin: 30px 50px 15px 20px; 
     padding: 0;
 }
 
 .nav-item {
-    font-size: 12px;
+    font-size: 18px;
     list-style: none;
+}
+
+.nav-item a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.nav-item a:hover {
+    color: #0E6721;
+}
+
+main {
+    margin: 5% 10%;
+}
+
+section {
+    margin: 5% 0;
+}
+
+.marker {
+    background:linear-gradient(transparent 60%, #ff6 60%);
+}
+
+.subject {
+    display: flex;
+    justify-content: space-around;
+}
+
+.tag{
+    font-size: 1.1em;
+    margin: auto 0;
+}
+
+#tag {
+    display: block;
+    width: 80%;
+    padding: 15px;
+    font-size: 12px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* 入力欄にフォーカスが当たった（クリックされた）時のスタイル */
+#tag:focus {
+    border-color: #0E6721;
+    outline: none;
+}
+
+.button,
+.submit-button {
+    display: block;
+    width: auto 0;
+    padding: 20px 60px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background: #0E6721;
+    border: none;
+    cursor: pointer;
+} 
+
+/* 元のinputボタンを画面から見えなくする */
+.image-file input[type="file"] {
+    display: none;
+}
+
+/* 見た目用のボタン（label）のスタイル */
+.file-upload-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0E6721;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* マウスが乗った時のスタイル */
+.file-upload-button:hover {
+    background-color: #0a4e1a;
+}
+
+/* 選択されたファイル名を表示する部分のスタイル */
+#file-name {
+    margin-left: 15px;
+    color: #333;
+}
+
+footer {
+    background-color: #0E6721;
+    bottom: 0;
+}
+
+footer p {
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
 }
