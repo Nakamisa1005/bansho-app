@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>板書復習支援アプリ -生成結果-</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- フォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
 <body>
-    <div class="container">
-        <h1>生成結果</h1>
+    <header>
+        <h1 class="header-title">板書ログ</h1>
+    </header>
+    <nav class="nav-container">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="#AboutApp">このアプリについて</a></li>
+            <li class="nav-item"><a href="#UploadNote">ノートのアップロード</a></li>
+            <li class="nav-item"><a href="#Archive">アーカイブ</a></li>
+        </ul>
+    </nav><!-- /.nav-container-->
+
+    <main>
+        <h1 class="section-title"><span class="marker-red">生成結果</span></h1>
         
-        <h2>OCRで抽出されたテキスト</h2>
+        <h2 class="section-title"><span class="marker-yellow">OCRで抽出されたテキスト</span></h2>
         <pre>{{ extracted_text_data }}</pre>
 
-        <h2>AIによる要約・キーワード</h2>
+        <h2 class="section-title"><span class="marker-yellow">AIによる要約・キーワード</span></h2>
         <pre>{{ result_text.split('復習問題')[0] | safe }}</pre>
 
-        <h2>復習問題に挑戦！</h2>
+        <h2 class="section-title"><span class="marker-yellow">復習問題に挑戦！</span></h2>
         <div id="quiz-container">
             {% for quiz in quizzes %}
             <div class="quiz-item" data-quiz-type="{{ quiz.type }}">
@@ -33,9 +55,10 @@
             </div>
             {% endfor %}
         </div>
-        <button onclick="checkAnswers()">答え合わせ</button>
-        <a href="/">別の画像で試す</a>
-    </div>
+        <button onclick="checkAnswers()" class="action-button">答え合わせ</button>
+        <a href="/" class="action-button action-button-secondary">別の画像で試す</a>
+        
+    </main>
 
     <script>
     async function checkAnswers() {

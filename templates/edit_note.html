@@ -2,34 +2,52 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ノートを編集 - 板書復習支援アプリ</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
-        .container { max-width: 800px; margin: auto; }
-        textarea { width: 100%; height: 200px; font-size: 1em; }
-        .edit-area { margin-bottom: 20px; }
-        input[type="submit"] { font-size: 1.1em; padding: 10px 15px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>板書復習支援アプリ -ノート編集-</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- フォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>ノートを編集</h1>
-        
-        <form action="/update_note/{{ note.id }}" method="post">
-            <div class="edit-area">
-                <h2>抽出されたテキスト</h2>
-                <textarea name="ocr_text">{{ note.ocr_text }}</textarea>
-            </div>
+    <header>
+        <h1 class="header-title">板書ログ</h1>
+    </header>
+    <nav class="nav-container">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="#AboutApp">このアプリについて</a></li>
+            <li class="nav-item"><a href="#UploadNote">ノートのアップロード</a></li>
+            <li class="nav-item"><a href="#Archive">アーカイブ</a></li>
+        </ul>
+    </nav><!-- /.nav-container-->
 
-            <div class="edit-area">
-                <h2>AIによる生成結果</h2>
-                <textarea name="ai_result">{{ note.ai_result }}</textarea>
-            </div>
+    <main>
+        <h1 class="section-title"><span class="marker-red">ノートを編集</span></h1>
+        <nav class="menu-nav-container">
+            <ul class="menu-nav-list">
+                <li class="menu-nav-item"><a href="/archive"><- アーカイブ一覧に戻る</a></li>
+            </ul>
+        </nav>
 
-            <input type="submit" value="変更を保存する">
-        </form>
+        <div class="edit-container">
+            <form action="/update_note/{{ note.id }}" method="post">
+                
+                <div class="edit-area">
+                    <h2 class="section-title"><span class="marker-yellow">抽出されたテキスト</span></h2>
+                    <textarea name="ocr_text" class="edit-box">{{ note.ocr_text }}</textarea>
+                </div>
 
-        <a href="/archive"><- アーカイブ一覧に戻る</a>
-    </div>
+                <div class="edit-area">
+                    <h2 class="section-title"><span class="marker-yellow">AIによる生成結果</span></h2>
+                    <textarea name="ai_result" class="edit-box">{{ note.ai_result }}</textarea>
+                </div>
+
+                <button type="submit" class="action-button">変更を保存する</button>
+
+            </form>
+        </div>
+    </main>
 </body>
 </html>

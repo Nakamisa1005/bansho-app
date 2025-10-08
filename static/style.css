@@ -65,8 +65,12 @@ section {
     margin: 5% 0;
 }
 
-.marker {
+.marker-yellow {
     background:linear-gradient(transparent 60%, #ff6 60%);
+}
+
+.marker-red {
+    background:linear-gradient(transparent 60%, rgb(255, 168, 168) 60%);
 }
 
 .subject {
@@ -131,6 +135,10 @@ input.action-button, button.action-button {
     font-family: inherit;
 }
 
+.action-button-secondary {
+    background: #6c757d; /* セカンダリボタンの色（グレー系） */
+}
+
 .action-button-container {
     display: flex;
     gap: 0 3%;
@@ -160,6 +168,51 @@ input.action-button, button.action-button {
 #file-name {
     margin-left: 15px;
     color: #333;
+}
+
+.edit-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.edit-area {
+    margin-bottom: 30px;
+}
+
+.edit-area h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #0E6721;
+    padding-bottom: 5px;
+}
+
+.edit-box {
+    width: 100%;
+    height: 300px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    line-height: 1.6;
+    box-sizing: border-box;
+}
+
+.edit-box:focus {
+    border-color: #0E6721;
+    outline: none;
+}
+
+
+.edit-container .action-button {
+    display: block;
+    width: 50%; 
+    margin: 0 auto;
+    padding: 15px;
 }
 
 footer {

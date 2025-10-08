@@ -24,7 +24,7 @@
     </nav><!-- /.nav-container-->
 
     <main>
-        <h2 class="section-title"><span class="marker">アーカイブ一覧：{{ tag_name }}</span></h2>
+        <h2 class="section-title"><span class="marker-yellow">アーカイブ一覧：{{ tag_name }}</span></h2>
         <nav class="menu-nav-container">
             <ul class="menu-nav-list">
                 <li class="menu-nav-item"><a href="/archive"><- 科目一覧に戻る</a></li>
@@ -34,9 +34,9 @@
 
         {% for note in notes %}
             <div class="note-card">
-                <h2 class="section-title"><span class="marker">抽出されたテキスト</span></h2>
+                <h2 class="section-title"><span class="marker-yellow">抽出されたテキスト</span></h2>
                 <pre>{{ note.ocr_text }}</pre>
-                <h2 class="section-title"><span class="marker">AIによる生成結果</span></h2>
+                <h2 class="section-title"><span class="marker-yellow">AIによる生成結果</span></h2>
                 <pre>{{ note.ai_result | safe }}</pre>
 
                 <div class="action-button-container">
