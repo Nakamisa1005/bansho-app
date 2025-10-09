@@ -6,6 +6,7 @@ from google.cloud import vision
 import google.generativeai as genai
 import pyrebase # Pyrebaseをインポート
 from dotenv import load_dotenv
+from google.api_core import exceptions
 
 load_dotenv()
 
@@ -91,8 +92,12 @@ def generate_study_content_from_text(text):
     try:
         response = model.generate_content(prompt)
         return response.text.replace('•', '  *')
+    except exceptions.ResourceExhausted as e:
+        # 429エラー（利用上限）の場合のメッセージ
+        return "ただいまAPIが混み合っています。30秒ほど待ってから、もう一度試してください。"
     except Exception as e:
-        return f"AI処理中にエラー: {e}"
+        # その他の予期せぬエラーの場合
+        return f"AI処理中に予期せぬエラーが発生しました: {e}"
 
 # ==============================================================================
 # 認証ルート (ログイン・サインアップ) - (このセクションは変更なし)
