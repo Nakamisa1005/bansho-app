@@ -225,3 +225,65 @@ footer p {
     text-align: center;
     margin: 0;
 }
+
+/* ==================================
+   スマホ用のスタイル（768px以下で適用）
+   ================================== */
+@media (max-width: 768px) {
+    main {
+        margin: 5% 5%; /* 左右の余白を減らす */
+    }
+
+    /* ヘッダーナビゲーションの調整 */
+    .nav-container {
+        width: 90%; /* 横幅を広げる */
+    }
+    .nav-list {
+        margin: 20px 0;
+        font-size: 16px; /* 文字を少し小さく */
+    }
+    .nav-item {
+        font-size: 12px;
+    }
+
+    /* フォーム要素の調整 */
+    .subject {
+        flex-direction: column; /* 縦積みにする */
+    }
+    #tag {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* ファイル選択ボタンのレイアウト調整 */
+    .image-file {
+        display: flex;
+        flex-direction: column; /* 縦積みにする */
+        align-items: flex-start;
+    }
+    #file-name {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    /* 編集画面の調整 */
+    .edit-container {
+        padding: 15px;
+    }
+    .edit-box {
+        height: 200px; /* テキストエリアの高さを少し低く */
+    }
+    .edit-container .action-button {
+        width: 100%; /* 保存ボタンを全幅に */
+    }
+    
+    /* アクションボタン（編集、削除など）を全幅にする */
+    .action-button {
+        display: block;
+        margin: 10px 0;
+    }
+    
+    .action-button-container {
+        flex-direction: column; /* 縦積みにする */
+    }
+}
