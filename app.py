@@ -211,13 +211,13 @@ def upload_and_process():
         file.save(filepath)
         
         try:
-            # 1. OCRでテキスト抽出
+            # 1. OCR
             extracted_text = detect_text_with_vision_api(filepath)
             
-            # 2. AIで学習コンテンツ生成
+            # 2. AI生成
             final_result = generate_study_content_from_text(extracted_text)
             
-            # 3. データベースに保存
+            # 3. DB保存
             db.collection('notes').add({
                 'user_id': user_id,
                 'created_at': firestore.SERVER_TIMESTAMP,
@@ -226,14 +226,21 @@ def upload_and_process():
                 'tag': tag
             })
             
-            # ★★★ 4. クイズのパース処理 (ここを追加) ★★★
+            # 4. クイズのパース
             quizzes_data = parse_quiz_text(final_result)
             
-            # ★★★ 5. quizzesデータをHTMLへ渡す ★★★
+            #5. 要約部分だけを綺麗に切り取る処理
+            # "TYPE:" という文字より前の部分を要約として扱う
+            if "TYPE:" in final_result:
+                summary_text = final_result.split("TYPE:")[0]
+                summary_text = summary_text.replace("3. **復習問題**:", "").replace("3. 復習問題:", "").strip()
+            else:
+                summary_text = final_result
+
             return render_template(
                 'result.html', 
                 extracted_text_data=extracted_text, 
-                result_text=final_result, 
+                summary_text=summary_text,
                 quizzes=quizzes_data
             )
             

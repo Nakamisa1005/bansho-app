@@ -170,6 +170,14 @@ input.action-button, button.action-button {
     color: #333;
 }
 
+.ai-result {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1em;
+    line-height: 1.6;
+    box-sizing: border-box;
+}
+
 .edit-container {
     max-width: 800px;
     margin: 40px auto;

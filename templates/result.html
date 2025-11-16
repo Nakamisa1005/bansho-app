@@ -30,7 +30,7 @@
         <pre>{{ extracted_text_data }}</pre>
 
         <h2 class="section-title"><span class="marker-yellow">AIによる要約・キーワード</span></h2>
-        <pre>{{ result_text.split('復習問題')[0] | safe }}</pre>
+        <pre class="ai-result">{{ summary_text | safe }}</pre>
 
         <h2 class="section-title"><span class="marker-yellow">復習問題に挑戦！</span></h2>
         <div id="quiz-container">
