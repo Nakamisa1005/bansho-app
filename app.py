@@ -1,10 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
 from google.cloud import vision
 import google.generativeai as genai
-import pyrebase # Pyrebaseをインポート
+import pyrebase
 from dotenv import load_dotenv
 from google.api_core import exceptions
 
@@ -12,8 +12,7 @@ load_dotenv()
 
 # --- Flaskアプリケーションの準備 ---
 app = Flask(__name__)
-# ▼▼▼【修正点1】セッション機能のために秘密鍵を設定▼▼▼
-app.secret_key = 'a-very-secret-and-random-key' # この文字列は何でも良いですが、秘密にしてください
+app.secret_key = 'a-very-secret-and-random-key' 
 
 # --- 各種設定 ---
 UPLOAD_FOLDER = 'uploads'
@@ -21,7 +20,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# ▼▼▼【修正点2】Firebase Authentication (Pyrebase) の設定を追加▼▼▼
+# --- Firebase Authentication (Pyrebase) ---
 firebaseConfig = {
   "apiKey": "AIzaSyBYosHPBYGwbA7rKSNEUqNKVB4MRhuz90c",
   "authDomain": "bansho-app.firebaseapp.com",
@@ -32,12 +31,11 @@ firebaseConfig = {
   "databaseURL": ""
 }
 firebase = pyrebase.initialize_app(firebaseConfig)
-auth = firebase.auth() # 認証用のauthオブジェクト
+auth = firebase.auth()
 
-# --- Firebase Admin SDK (Firestore) の設定 ---
+# --- Firebase Admin SDK (Firestore) ---
 firebase_cred_path = os.environ.get('FIREBASE_CREDENTIALS_PATH')
 if firebase_cred_path:
-    # 既に初期化されているかチェック
     if not firebase_admin._apps:
         cred = credentials.Certificate(firebase_cred_path)
         firebase_admin.initialize_app(cred)
@@ -55,7 +53,6 @@ else:
 # ==============================================================================
 # 関数たち（部品）
 # ==============================================================================
-# ... (detect_text_with_vision_api と generate_study_content_from_text は変更なし) ...
 def detect_text_with_vision_api(image_path):
     client = vision.ImageAnnotatorClient()
     with open(image_path, 'rb') as image_file:
@@ -111,14 +108,44 @@ def generate_study_content_from_text(text):
         response = model.generate_content(prompt)
         return response.text.replace('•', '  *')
     except exceptions.ResourceExhausted as e:
-        # 429エラー（利用上限）の場合のメッセージ
         return "ただいまAPIが混み合っています。30秒ほど待ってから、もう一度試してください。"
     except Exception as e:
-        # その他の予期せぬエラーの場合
         return f"AI処理中に予期せぬエラーが発生しました: {e}"
 
+# ★★★ 追加したパース用関数 ★★★
+def parse_quiz_text(text):
+    """AIが生成したテキストから、復習問題の部分だけを抜き出してリスト化する"""
+    quizzes = []
+    lines = text.split('\n')
+    
+    for line in lines:
+        line = line.strip()
+        if line.startswith('TYPE:'):
+            try:
+                quiz = {}
+                parts = line.split('@@')
+                
+                for part in parts:
+                    if part.startswith('TYPE:'):
+                        quiz['type'] = part.replace('TYPE:', '').strip()
+                    elif part.startswith('QUESTION:'):
+                        quiz['question'] = part.replace('QUESTION:', '').strip()
+                    elif part.startswith('ANSWER:'):
+                        quiz['answer'] = part.replace('ANSWER:', '').strip()
+                    elif part.startswith('CHOICES:'):
+                        choices_str = part.replace('CHOICES:', '').strip()
+                        quiz['choices'] = [c.strip() for c in choices_str.split(',')]
+                
+                if 'type' in quiz and 'question' in quiz:
+                    quizzes.append(quiz)
+            
+            except Exception as e:
+                print(f"パースエラー: {line}, {e}")
+                continue
+    return quizzes
+
 # ==============================================================================
-# 認証ルート (ログイン・サインアップ) - (このセクションは変更なし)
+# 認証ルート
 # ==============================================================================
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -156,7 +183,7 @@ def logout():
     return redirect(url_for('login'))
 
 # ==============================================================================
-# Flaskのルーティング（Webページの各URLの処理）
+# Webページの処理
 # ==============================================================================
 @app.route('/')
 def home():
@@ -184,8 +211,13 @@ def upload_and_process():
         file.save(filepath)
         
         try:
+            # 1. OCRでテキスト抽出
             extracted_text = detect_text_with_vision_api(filepath)
+            
+            # 2. AIで学習コンテンツ生成
             final_result = generate_study_content_from_text(extracted_text)
+            
+            # 3. データベースに保存
             db.collection('notes').add({
                 'user_id': user_id,
                 'created_at': firestore.SERVER_TIMESTAMP,
@@ -193,11 +225,48 @@ def upload_and_process():
                 'ai_result': final_result,
                 'tag': tag
             })
-            # ... (クイズ解析部分は省略)
-            return render_template('result.html', extracted_text_data=extracted_text, result_text=final_result, quizzes=[])
+            
+            # ★★★ 4. クイズのパース処理 (ここを追加) ★★★
+            quizzes_data = parse_quiz_text(final_result)
+            
+            # ★★★ 5. quizzesデータをHTMLへ渡す ★★★
+            return render_template(
+                'result.html', 
+                extracted_text_data=extracted_text, 
+                result_text=final_result, 
+                quizzes=quizzes_data
+            )
+            
         except Exception as e:
             return f"処理中にエラーが発生しました: {e}"
     return "エラー: 不明なエラーが発生しました。"
+
+# --- AIによる記述問題の簡易採点用API ---
+@app.route('/check_descriptive', methods=['POST'])
+def check_descriptive():
+    data = request.get_json()
+    user_answer = data.get('user_answer')
+    model_answer = data.get('model_answer')
+    
+    model = genai.GenerativeModel('gemini-pro-latest')
+    prompt = f"""
+    あなたは採点官です。
+    以下の「模範解答」と「ユーザーの回答」を比較し、意味が合っていれば「正解」、間違っていれば「不正解」とだけ答えてください。
+    
+    模範解答: {model_answer}
+    ユーザーの回答: {user_answer}
+    """
+    try:
+        response = model.generate_content(prompt)
+        result = response.text.strip()
+        # 「正解」という言葉が含まれていれば正解とする
+        if "正解" in result and "不正解" not in result:
+            return jsonify({'result': '正解'})
+        else:
+            return jsonify({'result': '不正解'})
+    except Exception:
+        return jsonify({'result': '判定不能'})
+
 
 @app.route('/archive')
 def archive_tags():
@@ -208,9 +277,7 @@ def archive_tags():
     except Exception:
         return redirect(url_for('logout'))
 
-    # ▼▼▼【修正点3】重複したクエリを削除し、ユーザーIDでの絞り込みを正しく行う▼▼▼
     notes_ref = db.collection('notes').where('user_id', '==', user_id).stream()
-    
     tags = set()
     for note in notes_ref:
         note_data = note.to_dict()
@@ -220,7 +287,6 @@ def archive_tags():
 
 @app.route('/archive/<tag_name>')
 def archive_by_tag(tag_name):
-    # ▼▼▼【修正点4】セキュリティチェックを追加▼▼▼
     if 'user' not in session: return redirect(url_for('login'))
     try:
         user_info = auth.get_account_info(session['user'])
@@ -239,7 +305,6 @@ def archive_by_tag(tag_name):
 
 @app.route('/note/<note_id>')
 def edit_note(note_id):
-    # ▼▼▼【修正点4】セキュリティチェックを追加▼▼▼
     if 'user' not in session: return redirect(url_for('login'))
     try:
         user_info = auth.get_account_info(session['user'])
@@ -250,7 +315,6 @@ def edit_note(note_id):
     note_ref = db.collection('notes').document(note_id).get()
     if note_ref.exists:
         note_data = note_ref.to_dict()
-        # ★★★自分のノートか確認★★★
         if note_data.get('user_id') != user_id:
             flash('他のユーザーのノートを編集する権限がありません。', 'danger')
             return redirect(url_for('archive_tags'))
@@ -262,7 +326,6 @@ def edit_note(note_id):
 
 @app.route('/update_note/<note_id>', methods=['POST'])
 def update_note(note_id):
-    # ▼▼▼【修正点4】セキュリティチェックを追加▼▼▼
     if 'user' not in session: return redirect(url_for('login'))
     try:
         user_info = auth.get_account_info(session['user'])
@@ -271,7 +334,6 @@ def update_note(note_id):
         return redirect(url_for('logout'))
 
     note_ref = db.collection('notes').document(note_id)
-    # ★★★更新前に、本当に自分のノートか確認★★★
     note_doc = note_ref.get()
     if not note_doc.exists or note_doc.to_dict().get('user_id') != user_id:
         flash('他のユーザーのノートを更新する権限がありません。', 'danger')
@@ -285,7 +347,6 @@ def update_note(note_id):
 
 @app.route('/delete_note/<note_id>', methods=['POST'])
 def delete_note(note_id):
-    # ▼▼▼【修正点4】セキュリティチェックを追加▼▼▼
     if 'user' not in session: return redirect(url_for('login'))
     try:
         user_info = auth.get_account_info(session['user'])
@@ -294,7 +355,6 @@ def delete_note(note_id):
         return redirect(url_for('logout'))
 
     note_ref = db.collection('notes').document(note_id)
-    # ★★★削除前に、本当に自分のノートか確認★★★
     note_doc = note_ref.get()
     if not note_doc.exists or note_doc.to_dict().get('user_id') != user_id:
         flash('他のユーザーのノートを削除する権限がありません。', 'danger')
@@ -306,7 +366,6 @@ def delete_note(note_id):
 
 @app.route('/regenerate_quiz/<note_id>', methods=['POST'])
 def regenerate_quiz(note_id):
-    # ▼▼▼【修正点4】セキュリティチェックを追加▼▼▼
     if 'user' not in session: return redirect(url_for('login'))
     try:
         user_info = auth.get_account_info(session['user'])
@@ -316,7 +375,6 @@ def regenerate_quiz(note_id):
 
     note_ref = db.collection('notes').document(note_id)
     note_doc = note_ref.get()
-    # ★★★再生成前に、本当に自分のノートか確認★★★
     if not note_doc.exists or note_doc.to_dict().get('user_id') != user_id:
         flash('他のユーザーのノートを再生成する権限がありません。', 'danger')
         return redirect(url_for('archive_tags'))
@@ -332,6 +390,5 @@ def regenerate_quiz(note_id):
         
     return redirect(url_for('archive_tags'))
 
-# ▼▼▼【修正点5】このブロックをファイルの最後に移動▼▼▼
 if __name__ == '__main__':
     app.run(debug=True)
