@@ -75,7 +75,9 @@ header {
 
 .header-logout-btn {
     position: absolute;
-    right: 30px;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--white);
     text-decoration: none;
     font-size: 0.9rem;
@@ -174,8 +176,15 @@ header {
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;
-    box-shadow: 4px 4px 0 rgba(14, 103, 33, 0.1);
-    /* 薄い緑の影 */
+}
+
+/* ログイン時・新規登録時のフォームラベル */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.1rem;
 }
 
 /* フォーム要素 */
@@ -188,7 +197,6 @@ textarea {
     font-size: 1rem;
     border: 2px solid #ccc;
     border-radius: 30px;
-    /* 丸く */
     box-sizing: border-box;
     transition: border-color 0.3s, background-color 0.3s;
     background-color: var(--white);
