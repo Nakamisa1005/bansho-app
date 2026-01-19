@@ -61,7 +61,7 @@ section {
    ヘッダー & ナビゲーション (Header & Nav)
    ========================================= */
 header {
-    background-color: var(--bg-color);
+    background-color: var(--primary-color);
     /* ヘッダー背景もクリーム色に */
     padding: 20px 0 0 0;
     text-align: center;
@@ -246,6 +246,7 @@ textarea:focus {
     border-radius: 30px;
     cursor: pointer;
     font-size: 0.9rem;
+    font-weight: bold;
 }
 
 .file-upload-label:hover {
