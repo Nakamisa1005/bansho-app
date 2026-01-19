@@ -230,7 +230,6 @@ def upload_and_process():
             quizzes_data = parse_quiz_text(final_result)
             
             #5. 要約部分だけを綺麗に切り取る処理
-            # "TYPE:" という文字より前の部分を要約として扱う
             if "TYPE:" in final_result:
                 summary_text = final_result.split("TYPE:")[0]
                 summary_text = summary_text.replace("3. **復習問題**:", "").replace("3. 復習問題:", "").strip()
@@ -255,7 +254,7 @@ def check_descriptive():
     user_answer = data.get('user_answer')
     model_answer = data.get('model_answer')
     
-    model = genai.GenerativeModel('gemini-pro-latest')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     あなたは採点官です。
     以下の「模範解答」と「ユーザーの回答」を比較し、意味が合っていれば「正解」、間違っていれば「不正解」とだけ答えてください。
