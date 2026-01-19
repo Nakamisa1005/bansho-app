@@ -64,7 +64,7 @@ def detect_text_with_vision_api(image_path):
     return response.full_text_annotation.text
 
 def generate_study_content_from_text(text):
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.0-flash-lite')
     prompt = f"""
     あなたは「優秀な参考書の執筆者」です。
     以下の【元のテキスト】（学生のノート）をもとに、自然な解説文を作成してください。
@@ -247,7 +247,7 @@ def check_descriptive():
     user_answer = data.get('user_answer')
     model_answer = data.get('model_answer')
     
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.0-flash-lite')
     prompt = f"""
     あなたは採点官です。
     以下の「模範解答」と「ユーザーの回答」を比較し、意味が合っていれば「正解」、間違っていれば「不正解」とだけ答えてください。
