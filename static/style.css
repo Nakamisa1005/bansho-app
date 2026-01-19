@@ -64,6 +64,7 @@ header {
     background-color: var(--primary-color);
     padding: 20px 0;
     text-align: center;
+    position: relative;
 }
 
 .header-title {
@@ -72,11 +73,28 @@ header {
     margin: 0;
 }
 
+.header-logout-btn {
+    position: absolute;
+    right: 30px;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid var(--white);
+    padding: 8px 20px;
+    border-radius: 30px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.header-logout-btn:hover {
+    background-color: var(--white);
+    color: var(--primary-color);
+}
+
 .nav-container {
     width: 100%;
     background-color: var(--bg-color);
     border-bottom: 3px solid var(--primary-color);
-    /* 下線で区切る */
     margin-bottom: 30px;
 }
 
@@ -365,6 +383,12 @@ footer p {
 @media (max-width: 768px) {
     .header-title {
         font-size: 2rem;
+    }
+
+    .header-logout-btn {
+        right: 15px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
     }
 
     .nav-list {

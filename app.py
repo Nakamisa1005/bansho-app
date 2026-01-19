@@ -64,7 +64,7 @@ def detect_text_with_vision_api(image_path):
     return response.full_text_annotation.text
 
 def generate_study_content_from_text(text):
-    model = genai.GenerativeModel('gemini-pro-latest')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     あなたは「優秀な参考書の執筆者」です。
     以下の【元のテキスト】（学生のノート）をもとに、自然な解説文を作成してください。
@@ -398,3 +398,11 @@ def regenerate_quiz(note_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route('/logout')
+def logout():
+    #ログアウト
+    session.clear()
+    
+    # ログイン画面に遷移
+    return redirect(url_for('login'))
