@@ -111,13 +111,29 @@ def generate_study_content_from_text(text):
     {text}
     ---
     """
-    try:
-        response = model.generate_content(prompt)
-        return response.text.replace('•', '  *')
-    except exceptions.ResourceExhausted as e:
-        return "ただいまAPIが混み合っています。30秒ほど待ってから、もう一度試してください。"
-    except Exception as e:
-        return f"AI処理中に予期せぬエラーが発生しました: {e}"
+    for model_name in model_candidates:
+        try:
+            print(f"🔄 モデル {model_name} で生成を試みています...")
+            model = genai.GenerativeModel(model_name)
+            
+            response = model.generate_content(prompt)
+            
+            # 成功したらテキストを返して終了
+            print(f"成功！ ({model_name} を使用)")
+            return response.text.replace('•', '  *')
+
+        except exceptions.ResourceExhausted:
+            print(f"モデル {model_name} は混雑しています。次を試します。")
+            continue
+        except Exception as e:
+            print(f"エラー ({model_name}): {e}")
+            continue
+
+    print("全てのモデルが失敗しました。")
+    return """
+    申し訳ありません。現在アクセスが集中しており、AIによる解説生成ができませんでした。
+    時間を置いて再度お試しいただくか、別のノートで試してみてください。
+"""
 
 def parse_quiz_text(text):
     """AIが生成したテキストから、復習問題の部分だけを抜き出してリスト化する"""
