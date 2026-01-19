@@ -64,7 +64,14 @@ def detect_text_with_vision_api(image_path):
     return response.full_text_annotation.text
 
 def generate_study_content_from_text(text):
-    model = genai.GenerativeModel('gemini-2.0-flash-lite')
+    model_candidates = [
+        'gemini-2.0-flash',  
+        'gemini-2.0-flash-lite',    
+        'gemini-2.5-flash',      
+        'gemini-flash-latest',    
+        'gemini-2.0-flash-lite-preview-02-05' 
+    ]
+
     prompt = f"""
     あなたは「優秀な参考書の執筆者」です。
     以下の【元のテキスト】（学生のノート）をもとに、自然な解説文を作成してください。
