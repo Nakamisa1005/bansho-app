@@ -112,7 +112,6 @@ def generate_study_content_from_text(text):
     except Exception as e:
         return f"AI処理中に予期せぬエラーが発生しました: {e}"
 
-# ★★★ 追加したパース用関数 ★★★
 def parse_quiz_text(text):
     """AIが生成したテキストから、復習問題の部分だけを抜き出してリスト化する"""
     quizzes = []
@@ -398,5 +397,4 @@ def logout():
     #ログアウト
     session.clear()
     flash('ログアウトしました。', 'info')
-    # ログイン画面に遷移
     return redirect(url_for('login'))

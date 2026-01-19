@@ -199,7 +199,6 @@ textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     background-color: #f0fdf4;
-    /* フォーカス時に薄い緑 */
 }
 
 /* ボタン */
