@@ -176,12 +176,6 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    flash('ログアウトしました。', 'info')
-    return redirect(url_for('login'))
-
 # ==============================================================================
 # Webページの処理
 # ==============================================================================
@@ -403,6 +397,6 @@ if __name__ == '__main__':
 def logout():
     #ログアウト
     session.clear()
-    
+    flash('ログアウトしました。', 'info')
     # ログイン画面に遷移
     return redirect(url_for('login'))
