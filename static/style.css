@@ -1,298 +1,387 @@
 @charset "UTF-8";
-/* ベーススタイル */
-html {
-    background-color: #FEFAE3;
+
+/* =========================================
+   基本設定 (Base Styles)
+   ========================================= */
+:root {
+    --bg-color: #FEFAE3;
+    /* 全体の背景色（クリーム色） */
+    --primary-color: #0E6721;
+    /* メインカラー（深緑） */
+    --accent-yellow: #fff799;
+    /* マーカー黄色 */
+    --accent-red: #ffccd5;
+    /* マーカー赤色 */
+    --text-color: #333333;
+    /* 文字色 */
+    --white: #ffffff;
 }
+
+html {
+    background-color: var(--bg-color);
+}
+
 body,
-pre {
+pre,
+input,
+button,
+textarea,
+select {
     font-family: "Zen Maru Gothic", sans-serif;
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     line-height: 1.6;
 }
 
-/* ヘッダー */
-header {
-    background-color: #0E6721;
-    width: 100%;
-    height: 120px;
+/* =========================================
+   レイアウト共通 (Layout)
+   ========================================= */
+body {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    width: 90%;
+    max-width: 1000px;
+    /* コンテンツの最大幅を制限して見やすく */
+    margin: 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+section {
+    margin-bottom: 60px;
+}
+
+/* =========================================
+   ヘッダー & ナビゲーション (Header & Nav)
+   ========================================= */
+header {
+    background-color: var(--bg-color);
+    /* ヘッダー背景もクリーム色に */
+    padding: 20px 0 0 0;
+    text-align: center;
 }
 
 .header-title {
-    color: #fff;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 900;
 }
 
 .nav-container {
-    width: 70%;
-    margin: 0 auto;
-    border-bottom: solid 1px #0E6721;
+    width: 100%;
+    background-color: var(--bg-color);
+    border-bottom: 3px solid var(--primary-color);
+    /* 下線で区切る */
+    margin-bottom: 30px;
 }
 
 .nav-list {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 30px 50px 15px 20px; 
-    padding: 0;
-}
-
-.nav-item,
-.menu-nav-item {
-    font-size: 18px;
+    justify-content: center;
+    gap: 40px;
+    padding: 15px 0;
+    margin: 0;
     list-style: none;
 }
 
-.nav-item a,
-.menu-nav-item a ,
-.tag-name a {
-    color: #000000;
+.nav-item a {
     text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: color 0.3s;
 }
 
-.nav-item a:hover,
-.menu-nav-item a:hover,
-.tag-name a:hover {
-    color: #0E6721;
+.nav-item a:hover {
+    color: var(--primary-color);
+    /* マーカー風ホバーエフェクト */
+    background: linear-gradient(transparent 60%, var(--accent-yellow) 60%);
 }
 
-main {
-    margin: 5% 20%;
+/* サブナビゲーション（戻るボタンなど） */
+.menu-nav-container {
+    margin-bottom: 20px;
 }
 
-section {
-    margin: 5% 0;
+.menu-nav-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.menu-nav-item a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* =========================================
+   コンポーネント (Components)
+   ========================================= */
+
+/* タイトルとマーカー */
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .marker-yellow {
-    background:linear-gradient(transparent 60%, #ff6 60%);
+    background: linear-gradient(transparent 60%, var(--accent-yellow) 60%);
+    padding: 0 10px;
+    display: inline-block;
 }
 
 .marker-red {
-    background:linear-gradient(transparent 60%, rgb(255, 168, 168) 60%);
-}
-
-.subject {
-    display: flex;
-    justify-content: space-around;
-}
-
-.tag{
-    font-size: 1.1em;
-    margin: auto 0;
-}
-
-#tag {
-    display: block;
-    width: 80%;
-    padding: 15px;
-    font-size: 12px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.back-button {
-    text-decoration: none;
-    color: #333;
-}
-
-.back-button a:hover {
-    color: #0E6721;
-}
-
-/* 入力欄にフォーカスが当たった（クリックされた）時のスタイル */
-#tag:focus {
-    border-color: #0E6721;
-    outline: none;
-}
-
-.action-button {
-    display: inline-block; /* 横に並べられるようにする */
-    padding: 12px 24px; /* 少し小さめに調整 */
-    margin: 5px;
-    text-align: center;
-    text-decoration: none;
-    color: #ffffff;
-    background: #0E6721;
-    border: none;
-    border-radius: 5px; /* 角を丸くすると見栄えが良くなります */
-    cursor: pointer;
-    font-size: 1em; /* 文字サイズを標準に */
-    transition: opacity 0.2s; /* ホバー時のアニメーション */
-} 
-
-.button-delete {
-    background-color: #C70039; /* 危険な操作なので赤色に */
-}
-
-.action-button:hover {
-    opacity: 0.8; /* 少し薄くする */
-}
-
-input.action-button, button.action-button {
-    font-family: inherit;
-}
-
-.action-button-secondary {
-    background: #6c757d; /* セカンダリボタンの色（グレー系） */
-}
-
-.action-button-container {
-    display: flex;
-    gap: 0 3%;
-}
-
-/* 元のinputボタンを画面から見えなくする */
-.image-file input[type="file"] {
-    display: none;
-}
-
-/* 見た目用のボタン（label）のスタイル */
-.file-upload-button {
+    background: linear-gradient(transparent 60%, var(--accent-red) 60%);
+    padding: 0 10px;
     display: inline-block;
-    padding: 10px 20px;
-    background-color: #0E6721;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-/* マウスが乗った時のスタイル */
-.file-upload-button:hover {
-    opacity: 0.8;
-}
-
-/* 選択されたファイル名を表示する部分のスタイル */
-#file-name {
-    margin-left: 15px;
-    color: #333;
-}
-
-.ai-result {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-size: 1em;
-    line-height: 1.6;
-    box-sizing: border-box;
-}
-
-.edit-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.edit-area {
+.section-description {
+    text-align: center;
     margin-bottom: 30px;
 }
 
-.edit-area h2 {
-    font-size: 1.5em;
-    color: #333;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #0E6721;
-    padding-bottom: 5px;
+/* カードスタイル（枠線デザイン） */
+.app-card {
+    background-color: var(--white);
+    border: 2px solid var(--primary-color);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 4px 4px 0 rgba(14, 103, 33, 0.1);
+    /* 薄い緑の影 */
 }
 
-.edit-box {
+/* フォーム要素 */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
     width: 100%;
-    height: 300px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-    line-height: 1.6;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 30px;
+    /* 丸く */
     box-sizing: border-box;
+    transition: border-color 0.3s, background-color 0.3s;
+    background-color: var(--white);
 }
 
-.edit-box:focus {
-    border-color: #0E6721;
+input:focus,
+textarea:focus {
     outline: none;
+    border-color: var(--primary-color);
+    background-color: #f0fdf4;
+    /* フォーカス時に薄い緑 */
 }
 
+/* ボタン */
+.action-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.1s;
+    text-align: center;
+    border: 2px solid var(--primary-color);
+    /* 枠線も追加 */
+}
 
-.edit-container .action-button {
+.action-button:hover {
+    background-color: var(--white);
+    color: var(--primary-color);
+}
+
+.action-button:active {
+    transform: translateY(2px);
+}
+
+.action-button-secondary {
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.action-button-secondary:hover {
+    background-color: #eef7ef;
+}
+
+.button-delete {
+    background-color: #C70039;
+    border-color: #C70039;
+}
+
+.button-delete:hover {
+    color: #C70039;
+    background-color: #fff;
+}
+
+/* ファイルアップロードボタン */
+.file-upload-wrapper {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.file-upload-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.file-upload-label:hover {
+    opacity: 0.9;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* =========================================
+   ページ個別スタイル
+   ========================================= */
+
+/* --- アーカイブ (Grid View) --- */
+.search-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.search-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-label {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.search-input {
+    width: 250px !important;
+    border-color: var(--primary-color) !important;
+}
+
+.archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+.tag-card {
     display: block;
-    width: 50%; 
-    margin: 0 auto;
-    padding: 15px;
+    text-decoration: none;
+    color: var(--text-color);
+    text-align: center;
+    transition: transform 0.2s;
 }
 
+.tag-card:hover {
+    transform: translateY(-5px);
+}
+
+.tag-image-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--primary-color);
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #ccc;
+    font-weight: bold;
+}
+
+.tag-name-text {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* --- 生成結果・詳細 (Result View) --- */
+.ai-result-pre {
+    background-color: var(--white);
+    border: 2px solid var(--primary-color);
+    /* ノートっぽく */
+    border-radius: 5px;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.quiz-container {
+    display: grid;
+    gap: 20px;
+}
+
+.quiz-item {
+    background-color: var(--white);
+    border: 1px solid #ccc;
+    /* クイズは少し控えめな枠 */
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 5px solid var(--primary-color);
+    /* 左にアクセント */
+}
+
+/* --- フッター --- */
 footer {
-    background-color: #0E6721;
-    bottom: 0;
+    background-color: var(--primary-color);
+    padding: 20px;
+    text-align: center;
+    margin-top: auto;
 }
 
 footer p {
-    color: #ffffff;
-    text-align: center;
-    margin: 0;
+    color: var(--white);
 }
 
-/* ==================================
-   スマホ用のスタイル（768px以下で適用）
-   ================================== */
+/* =========================================
+   スマホ対応 (Responsive)
+   ========================================= */
 @media (max-width: 768px) {
-    main {
-        margin: 5% 5%; /* 左右の余白を減らす */
+    .header-title {
+        font-size: 2rem;
     }
 
-    /* ヘッダーナビゲーションの調整 */
-    .nav-container {
-        width: 90%; /* 横幅を広げる */
-    }
     .nav-list {
-        margin: 20px 0;
-        font-size: 16px; /* 文字を少し小さく */
-    }
-    .nav-item {
-        font-size: 12px;
+        gap: 15px;
+        font-size: 0.9rem;
     }
 
-    /* フォーム要素の調整 */
-    .subject {
-        flex-direction: column; /* 縦積みにする */
-    }
-    #tag {
-        width: 100%;
-        margin-top: 10px;
+    .archive-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    /* ファイル選択ボタンのレイアウト調整 */
-    .image-file {
-        display: flex;
-        flex-direction: column; /* 縦積みにする */
-        align-items: flex-start;
-    }
-    #file-name {
-        margin-left: 0;
-        margin-top: 10px;
+    .search-form {
+        flex-direction: column;
     }
 
-    /* 編集画面の調整 */
-    .edit-container {
-        padding: 15px;
-    }
-    .edit-box {
-        height: 200px; /* テキストエリアの高さを少し低く */
-    }
-    .edit-container .action-button {
-        width: 100%; /* 保存ボタンを全幅に */
-    }
-    
-    /* アクションボタン（編集、削除など）を全幅にする */
-    .action-button {
-        display: block;
-        margin: 10px 0;
-    }
-    
-    .action-button-container {
-        flex-direction: column; /* 縦積みにする */
+    .search-input {
+        width: 100% !important;
     }
 }

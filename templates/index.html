@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>板書復習支援アプリ</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- フォント -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <h1 class="header-title">板書ログ</h1>
@@ -19,55 +18,66 @@
         <ul class="nav-list">
             <li class="nav-item"><a href="#AboutApp">このアプリについて</a></li>
             <li class="nav-item"><a href="#UploadNote">ノートのアップロード</a></li>
-            <li class="nav-item"><a href="#Archive">アーカイブ</a></li>
+            <li class="nav-item"><a href="/archive">アーカイブ</a></li>
         </ul>
-    </nav><!-- /.nav-container-->
+    </nav>
 
     <main>
         <section id="AboutApp">
-            <h2 class="section-title"><span class="marker-yellow">このアプリについて</span></h2>
-            <p class="section-description">このアプリは、板書を復習するためのアプリです。</p>
-        </section><!-- /#AboutApp-->
+            <div class="app-card" style="text-align: center; border: none; background: transparent; box-shadow: none;">
+                <h2 class="section-title"><span class="marker-yellow">このアプリについて</span></h2>
+                <p class="section-description">
+                    授業の板書を撮影してアップロードするだけ。<br>
+                    AIが自動で「要約」と「復習問題」を作成し、あなたの学習をサポートします。
+                </p>
+            </div>
+        </section>
 
         <section id="UploadNote">
-            <h2 class="section-title"><span class="marker-yellow">アップロード</span></h2>
-            <p class="section-description">ノートの要約と復習用問題を作ります。科目名・単元名を入力して、
-                ノートの画像をアップロードしてください
-            </p>
-            <form action="/upload" method="post" enctype="multipart/form-data">
-                <div class="subject">
-                    <label for="tag" class="tag">科目名・タグ:</label>
-                    <input type="text" id="tag" name="tag" placeholder="例：歴史, 公民" required>
-                </div>
-                <br>
-                <div class="image-file">
-                    <label for="image-upload" class="file-upload-button">ファイルを選択</label>
-                    <input type="file" id="image-upload" name="image" required>
-                    <span id="file-name">選択されていません</span>
-                </div>
-                <br>
-        
-                <button type="submit" class="action-button">このノートで要約・問題を作る</button>
-            </form>
-        </section><!-- /#UploadNote-->
+            <div class="app-card">
+                <h2 class="section-title"><span class="marker-yellow">ノートのアップロード</span></h2>
+                <p class="section-description">科目名を入力し、板書の画像をアップロードしてください。</p>
 
-        <section id="Archive">
-            <h2 class="section-title"><span class="marker-yellow">アーカイブの閲覧</span></h2>
-            <p class="section-description">
-                これまでに作成した要約ノートを見ることができます。ノートの編集・削除・問題の再生成も可能です。
-            </p>
-            <a href="/archive" class="action-button">アーカイブ一覧</a>
-        </section><!-- /#Archive-->
+                <form action="/upload" method="post" enctype="multipart/form-data"
+                    style="max-width: 500px; margin: 0 auto;">
+                    <div style="margin-bottom: 20px;">
+                        <label for="tag" style="font-weight: bold; display:block; margin-bottom:5px;">科目名・タグ</label>
+                        <input type="text" id="tag" name="tag" placeholder="例：歴史, 公民" required>
+                    </div>
+
+                    <div class="file-upload-wrapper">
+                        <label for="image-upload" class="file-upload-label">
+                            画像ファイルを選択
+                        </label>
+                        <input type="file" id="image-upload" name="image" required>
+                        <div id="file-name" style="margin-top: 10px; font-size: 0.9rem; color: #555;">ファイルが選択されていません
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="action-button">要約・問題を作る</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="Archive" style="text-align: center;">
+            <h2 class="section-title"><span class="marker-yellow">アーカイブ</span></h2>
+            <p class="section-description">これまでに作成したノートを確認・復習できます。</p>
+            <a href="/archive" class="action-button action-button-secondary">アーカイブ一覧を見る</a>
+        </section>
     </main>
+
     <footer>
         <p>© 2025 BanshoLog</p>
     </footer>
 
     <script>
-        document.getElementById('image-upload').addEventListener('change', function() {
-            var fileName = this.files[0] ? this.files[0].name : "選択されていません";
+        document.getElementById('image-upload').addEventListener('change', function () {
+            var fileName = this.files[0] ? this.files[0].name : "ファイルが選択されていません";
             document.getElementById('file-name').textContent = fileName;
         });
     </script>
 </body>
+
 </html>

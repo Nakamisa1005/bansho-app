@@ -1,53 +1,67 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>板書復習支援アプリ -ノート編集-</title>
+    <title>ノート編集 - 板書ログ</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- フォント -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <h1 class="header-title">板書ログ</h1>
     </header>
     <nav class="nav-container">
         <ul class="nav-list">
-            <li class="nav-item"><a href="#AboutApp">このアプリについて</a></li>
-            <li class="nav-item"><a href="#UploadNote">ノートのアップロード</a></li>
-            <li class="nav-item"><a href="#Archive">アーカイブ</a></li>
+            <li class="nav-item"><a href="/">ホーム</a></li>
+            <li class="nav-item"><a href="/archive">アーカイブ一覧</a></li>
         </ul>
-    </nav><!-- /.nav-container-->
+    </nav>
 
     <main>
         <h1 class="section-title"><span class="marker-red">ノートを編集</span></h1>
+
         <nav class="menu-nav-container">
             <ul class="menu-nav-list">
-                <li class="menu-nav-item"><a href="/archive"><- アーカイブ一覧に戻る</a></li>
+                <li class="menu-nav-item"><a href="/archive/{{ note.tag }}">← {{ note.tag }} の一覧に戻る</a></li>
             </ul>
         </nav>
 
-        <div class="edit-container">
+        <div class="app-card">
             <form action="/update_note/{{ note.id }}" method="post">
-                
-                <div class="edit-area">
-                    <h2 class="section-title"><span class="marker-yellow">抽出されたテキスト</span></h2>
-                    <textarea name="ocr_text" class="edit-box">{{ note.ocr_text }}</textarea>
+
+                <div class="edit-area" style="margin-bottom: 30px;">
+                    <h2 class="section-title" style="font-size: 1.3rem; text-align: left;">
+                        <span class="marker-yellow">抽出されたテキスト</span>
+                    </h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">OCRで読み取った文字を修正できます。</p>
+                    <textarea name="ocr_text" rows="10" style="resize: vertical;">{{ note.ocr_text }}</textarea>
                 </div>
 
-                <div class="edit-area">
-                    <h2 class="section-title"><span class="marker-yellow">AIによる生成結果</span></h2>
-                    <textarea name="ai_result" class="edit-box">{{ note.ai_result }}</textarea>
+                <div class="edit-area" style="margin-bottom: 40px;">
+                    <h2 class="section-title" style="font-size: 1.3rem; text-align: left;">
+                        <span class="marker-yellow">AIによる生成結果</span>
+                    </h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">要約や問題文を自由に編集できます。</p>
+                    <textarea name="ai_result" rows="15" style="resize: vertical;">{{ note.ai_result }}</textarea>
                 </div>
 
-                <button type="submit" class="action-button">変更を保存する</button>
+                <div style="text-align: center;">
+                    <button type="submit" class="action-button">変更を保存する</button>
+                    <br><br>
+                    <a href="/archive" style="color: #666; font-size: 0.9rem; text-decoration: underline;">保存せずに戻る</a>
+                </div>
 
             </form>
         </div>
     </main>
+
+    <footer>
+        <p>© 2025 BanshoLog</p>
+    </footer>
 </body>
+
 </html>

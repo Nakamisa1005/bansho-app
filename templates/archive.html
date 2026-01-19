@@ -1,61 +1,74 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>板書復習支援アプリ -アーカイブ-</title>
+    <title>アーカイブ詳細 - {{ tag_name }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- フォント -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <h1 class="header-title">板書ログ</h1>
     </header>
     <nav class="nav-container">
         <ul class="nav-list">
-            <li class="nav-item"><a href="/">このアプリについて</a></li>
-            <li class="nav-item"><a href="/">ノートのアップロード</a></li>
-            <li class="nav-item"><a href="/archive">アーカイブ</a></li>
+            <li class="nav-item"><a href="/">ホーム</a></li>
+            <li class="nav-item"><a href="/archive">アーカイブ一覧</a></li>
         </ul>
-    </nav><!-- /.nav-container-->
+    </nav>
 
     <main>
-        <h2 class="section-title"><span class="marker-yellow">アーカイブ一覧：{{ tag_name }}</span></h2>
+        <h2 class="section-title"><span class="marker-yellow">{{ tag_name }} のノート</span></h2>
+
         <nav class="menu-nav-container">
             <ul class="menu-nav-list">
-                <li class="menu-nav-item"><a href="/archive"><- 科目一覧に戻る</a></li>
-                <li class="menu-nav-item"><a href="/"><- トップページに戻る</a></li>
+                <li class="menu-nav-item"><a href="/archive">← 科目一覧に戻る</a></li>
             </ul>
         </nav>
 
         {% for note in notes %}
-            <div class="note-card">
-                <h2 class="section-title"><span class="marker-yellow">抽出されたテキスト</span></h2>
-                <pre>{{ note.ocr_text }}</pre>
-                <h2 class="section-title"><span class="marker-yellow">AIによる生成結果</span></h2>
-                <pre>{{ note.ai_result | safe }}</pre>
-
-                <div class="action-button-container">
-                    <a href="/note/{{ note.id }}" class="action-button">このノートを編集する</a>
-
-                    <form action="/delete_note/{{ note.id }}" method="post" style="display: inline;">
-                        <input type="submit" value="このノートを削除する" class="action-button button-delete" onclick="return confirm('本当にこのノートを削除しますか？');">
-                    </form>
-
-                    <form action="/regenerate_quiz/{{ note.id }}" method="post" style="display: inline;">
-                        <input type="submit" value="問題を再生成する" class="action-button">
-                    </form>
-                </div>
+        <div class="app-card">
+            <div style="margin-bottom: 20px;">
+                <h3
+                    style="color:var(--primary-color); border-bottom: 2px dashed var(--primary-color); display:inline-block;">
+                    抽出されたテキスト</h3>
+                <pre class="ai-result-pre" style="max-height: 200px; overflow-y: auto;">{{ note.ocr_text }}</pre>
             </div>
-        {% else %}
-            <p>まだ保存されたノートはありません。</p>
-        {% endfor %}
 
-        
+            <div style="margin-bottom: 20px;">
+                <h3
+                    style="color:var(--primary-color); border-bottom: 2px dashed var(--primary-color); display:inline-block;">
+                    AI生成結果（要約・問題）</h3>
+                <div class="ai-result-pre">{{ note.ai_result | safe }}</div>
+            </div>
+
+            <div style="text-align: right; margin-top: 20px;">
+                <a href="/note/{{ note.id }}" class="action-button action-button-secondary"
+                    style="font-size:0.9rem; padding: 8px 20px;">編集</a>
+
+                <form action="/regenerate_quiz/{{ note.id }}" method="post" style="display: inline;">
+                    <input type="submit" value="問題再生成" class="action-button action-button-secondary"
+                        style="font-size:0.9rem; padding: 8px 20px;">
+                </form>
+
+                <form action="/delete_note/{{ note.id }}" method="post" style="display: inline;">
+                    <input type="submit" value="削除" class="action-button button-delete"
+                        style="font-size:0.9rem; padding: 8px 20px;" onclick="return confirm('本当に削除しますか？');">
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <p style="text-align: center;">この科目のノートはまだありません。</p>
+        {% endfor %}
     </main>
+
+    <footer>
+        <p>© 2025 BanshoLog</p>
+    </footer>
 </body>
+
 </html>

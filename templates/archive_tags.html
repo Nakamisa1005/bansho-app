@@ -1,43 +1,108 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>板書復習支援アプリ -アーカイブ-</title>
+    <title>アーカイブ - 板書ログ</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- フォント -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <h1 class="header-title">板書ログ</h1>
     </header>
     <nav class="nav-container">
         <ul class="nav-list">
-            <li class="nav-item"><a href="/">このアプリについて</a></li>
-            <li class="nav-item"><a href="/">ノートのアップロード</a></li>
-            <li class="nav-item"><a href="/archive">アーカイブ</a></li>
+            <li class="nav-item"><a href="/">ホームに戻る</a></li>
+            <li class="nav-item"><a href="/#UploadNote">新規アップロード</a></li>
         </ul>
-    </nav><!-- /.nav-container-->
+    </nav>
 
     <main>
-        <h2 class="section-title"><span class="marker-yellow">科目・タグ一覧</span></h2>
-        <nav class="menu-nav-container">
-            <ul class="menu-nav-list">
-                <li class="menu-nav-item"><a href="/"><- トップページに戻る</a></li>
-            </ul>
-        </nav>
+        <h2 class="section-title">アーカイブの閲覧</h2>
 
-        <ul>
+        <div class="search-container">
+            <h3 style="margin-bottom:10px; font-size:1.2rem;">検索</h3>
+            <div class="search-form">
+                <span class="search-label">キーワード</span>
+                <input type="text" class="search-input" placeholder="例) 歴史">
+            </div>
+        </div>
+
+        <div class="archive-grid">
             {% for tag in tags %}
-                <li class="tag-name"><a href="/archive/{{ tag }}">{{ tag }}</a></li>
+            <a href="/archive/{{ tag }}" class="tag-card">
+                <div class="tag-image-placeholder">
+                    <span style="transform: rotate(-15deg);">ノート画像</span>
+                </div>
+                <div class="tag-name-text">{{ tag }}</div>
+            </a>
             {% else %}
-                <li>まだ保存されたノートはありません。</li>
+            <p style="text-align:center; width:100%;">まだ保存されたノートはありません。</p>
             {% endfor %}
-        </ul>
+        </div>
     </main>
+
+    <footer>
+        <p>© 2025 BanshoLog</p>
+    </footer>
 </body>
+
+</html>
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アーカイブ - 板書ログ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1 class="header-title">板書ログ</h1>
+    </header>
+    <nav class="nav-container">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/">ホームに戻る</a></li>
+            <li class="nav-item"><a href="/#UploadNote">新規アップロード</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2 class="section-title">アーカイブの閲覧</h2>
+
+        <div class="search-container">
+            <h3 style="margin-bottom:10px; font-size:1.2rem;">検索</h3>
+            <div class="search-form">
+                <span class="search-label">キーワード</span>
+                <input type="text" class="search-input" placeholder="例) 歴史">
+            </div>
+        </div>
+
+        <div class="archive-grid">
+            {% for tag in tags %}
+            <a href="/archive/{{ tag }}" class="tag-card">
+                <div class="tag-image-placeholder">
+                    <span style="transform: rotate(-15deg);">ノート画像</span>
+                </div>
+                <div class="tag-name-text">{{ tag }}</div>
+            </a>
+            {% else %}
+            <p style="text-align:center; width:100%;">まだ保存されたノートはありません。</p>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 BanshoLog</p>
+    </footer>
+</body>
+
 </html>
