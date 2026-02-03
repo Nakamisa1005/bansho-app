@@ -22,7 +22,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 # --- Firebase Authentication (Pyrebase) ---
 firebaseConfig = {
-  "apiKey": "AIzaSyBYosHPBYGwbA7rKSNEUqNKVB4MRhuz90c",
+  "apiKey": "AIzaSyCD5i0PXP91W_fLKuIVh36jBJjCCBpX-hI",
   "authDomain": "bansho-app.firebaseapp.com",
   "projectId": "bansho-app",
   "storageBucket": "bansho-app.firebasestorage.app",
