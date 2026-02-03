@@ -42,30 +42,34 @@
 
             <div id="quiz-container" class="quiz-container">
                 {% for quiz in quizzes %}
-                <div class="quiz-item" data-quiz-type="{{ quiz.type }}">
-                    <p style="font-weight:bold; margin-bottom:10px;">Q. {{ quiz.question }}</p>
+                    {% set quiz_index = loop.index0 %}
 
-                    {% if quiz.type == '穴埋め' %}
-                    <input type="text" class="user-answer" placeholder="回答を入力">
-                    <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
-                    {% elif quiz.type == '選択' %}
-                    <div style="display:flex; flex-direction:column; gap:5px;">
-                        {% for choice in quiz.choices %}
-                        <label style="cursor:pointer;">
-                            <input type="radio" name="choice-{{ loop.index0 }}-{{ loop.parent.loop.index0 }}"
-                                value="{{ choice }}" class="user-answer">
-                            {{ choice }}
-                        </label>
-                        {% endfor %}
+                    <div class="quiz-item" data-quiz-type="{{ quiz.type }}">
+                        <p style="font-weight:bold; margin-bottom:10px;">Q. {{ quiz.question }}</p>
+
+                        {% if quiz.type == '穴埋め' %}
+                            <input type="text" class="user-answer" placeholder="回答を入力">
+                            <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
+                        
+                        {% elif quiz.type == '選択' %}
+                            <div style="display:flex; flex-direction:column; gap:5px;">
+                                {% for choice in quiz.choices %}
+                                <label style="cursor:pointer;">
+                                    <input type="radio" name="quiz-{{ quiz_index }}" 
+                                        value="{{ choice }}" class="user-answer">
+                                    {{ choice }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
+                        
+                        {% elif quiz.type == '記述' %}
+                            <textarea class="user-answer" rows="3" placeholder="回答を入力"></textarea>
+                            <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
+                        {% endif %}
+
+                        <div class="feedback" style="margin-top:10px; font-weight:bold;"></div>
                     </div>
-                    <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
-                    {% elif quiz.type == '記述' %}
-                    <textarea class="user-answer" rows="3" placeholder="回答を入力"></textarea>
-                    <input type="hidden" class="correct-answer" value="{{ quiz.answer }}">
-                    {% endif %}
-
-                    <div class="feedback" style="margin-top:10px; font-weight:bold;"></div>
-                </div>
                 {% endfor %}
             </div>
 
