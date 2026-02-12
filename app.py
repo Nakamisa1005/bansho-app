@@ -10,17 +10,17 @@ from google.api_core import exceptions
 
 load_dotenv()
 
-# --- Flaskアプリケーションの準備 ---
+# Flaskアプリケーションの準備
 app = Flask(__name__)
 app.secret_key = 'a-very-secret-and-random-key' 
 
-# --- 各種設定 ---
+# 各種設定
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# --- Firebase Authentication (Pyrebase) ---
+# Firebase 
 firebaseConfig = {
   "apiKey": "AIzaSyBYosHPBYGwbA7rKSNEUqNKVB4MRhuz90c",
   "authDomain": "bansho-app.firebaseapp.com",
@@ -33,7 +33,7 @@ firebaseConfig = {
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 
-# --- Firebase Admin SDK (Firestore) ---
+# Firebase Admin SDK (Firestore)
 firebase_cred_path = os.environ.get('FIREBASE_CREDENTIALS_PATH')
 if firebase_cred_path:
     if not firebase_admin._apps:
@@ -43,7 +43,7 @@ if firebase_cred_path:
 else:
     print("Firebaseの認証情報(環境変数)が見つかりません。")
 
-# --- Gemini APIキーの設定 ---
+# Gemini APIキーの設定 Renderに書いてある
 gemini_api_key = os.environ.get('GEMINI_API_KEY')
 if gemini_api_key:
     genai.configure(api_key=gemini_api_key)
@@ -51,8 +51,9 @@ else:
     print("Gemini APIキー(環境変数)が見つかりません。")
 
 # ==============================================================================
-# 関数たち（部品）
+# 関数
 # ==============================================================================
+# OCR
 def detect_text_with_vision_api(image_path):
     client = vision.ImageAnnotatorClient()
     with open(image_path, 'rb') as image_file:
@@ -63,6 +64,7 @@ def detect_text_with_vision_api(image_path):
         raise Exception(response.error.message)
     return response.full_text_annotation.text
 
+# AI生成 geminiのmodel
 def generate_study_content_from_text(text):
     model_candidates = [
         'gemini-2.0-flash',  
@@ -111,6 +113,7 @@ def generate_study_content_from_text(text):
     {text}
     ---
     """
+    # model_candidatesの中から一つずつ試していく
     for model_name in model_candidates:
         try:
             print(f"🔄 モデル {model_name} で生成を試みています...")
@@ -129,28 +132,11 @@ def generate_study_content_from_text(text):
             print(f"エラー ({model_name}): {e}")
             continue
     
-    # 動画撮影用ダミーデータ（憲法）
     return """
-    APIが混み合っているため見本データを返しています。
-    1. **要点まとめ**
-    このノートは、憲法13条の「幸福追求権」と14条の「法の下の平等」についてまとめられています。
-    13条では、幸福追求権が新しい人権を導く根拠となる「具体的権利説」や、保護範囲を人格的生存に限る「人格的利益説」が整理され、前科照会事件や指紋押捺拒否などの判例が挙げられています。
-    14条では、「法の下」の意味を立法者も拘束すると解する「立法者拘束説」や、後段の列挙事由（人種・信条など）を「例示列挙説」とする通説が解説されています。また、尊属殺人の重罰規定や女性の再婚禁止期間が違憲とされた判例の比較も重要です。
-
-    2. **重要キーワード**
-    * 幸福追求権 (憲法13条)
-    * 人格的利益説
-    * 法の下の平等 (憲法14条)
-    * 立法者拘束説
-    * 例示列挙説
-    * 尊属殺重罰規定違憲判決
-
-    3. **復習問題**
-    TYPE:穴埋め@@QUESTION:憲法14条1項に挙げられている人種、信条などは、限定的なものではなく例示であるとする説を（　　）という。@@ANSWER:例示列挙説
-    TYPE:選択@@QUESTION:ノートにある判例の中で「違憲」と判断されたものはどれ？@@CHOICES:サラリーマン税金訴訟,前科照会事件,女性の再婚禁止期間@@ANSWER:女性の再婚禁止期間
-    TYPE:記述@@QUESTION:尊属殺人の重罰規定が違憲とされた理由を、ノートの記述に基づいて簡潔に答えなさい。@@ANSWER:区別の目的には合理性があるが、刑罰の差が極端すぎて不合理であるため。
+    APIが混み合っているため、処理に失敗しました。しばらく待ってから再度お試しください。
     """
 
+# 復習問題
 def parse_quiz_text(text):
     """AIが生成したテキストから、復習問題の部分だけを抜き出してリスト化する"""
     quizzes = []
@@ -183,8 +169,9 @@ def parse_quiz_text(text):
     return quizzes
 
 # ==============================================================================
-# 認証ルート
+# ログイン・登録
 # ==============================================================================
+#新規登録
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -199,6 +186,7 @@ def signup():
             return redirect(url_for('signup'))
     return render_template('signup.html')
 
+#ログイン
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -217,12 +205,14 @@ def login():
 # ==============================================================================
 # Webページの処理
 # ==============================================================================
+#ホーム画面
 @app.route('/')
 def home():
     if 'user' in session:
         return render_template('index.html')
     return redirect(url_for('login'))
 
+#アップロード
 @app.route('/upload', methods=['POST'])
 def upload_and_process():
     if 'user' not in session: return redirect(url_for('login'))
@@ -279,7 +269,7 @@ def upload_and_process():
             return f"処理中にエラーが発生しました: {e}"
     return "エラー: 不明なエラーが発生しました。"
 
-# --- AIによる記述問題の簡易採点用API ---
+# AIによる記述問題の簡易採点用API
 @app.route('/check_descriptive', methods=['POST'])
 def check_descriptive():
     data = request.get_json()
@@ -305,7 +295,7 @@ def check_descriptive():
     except Exception:
         return jsonify({'result': '判定不能'})
 
-
+#アーカイブ
 @app.route('/archive')
 def archive_tags():
     if 'user' not in session: return redirect(url_for('login'))
@@ -323,6 +313,7 @@ def archive_tags():
             tags.add(note_data['tag'])
     return render_template('archive_tags.html', tags=sorted(list(tags)))
 
+#タグ別アーカイブ
 @app.route('/archive/<tag_name>')
 def archive_by_tag(tag_name):
     if 'user' not in session: return redirect(url_for('login'))
@@ -341,6 +332,7 @@ def archive_by_tag(tag_name):
         notes_list.append(note_data)
     return render_template('archive.html', notes=notes_list, tag_name=tag_name)
 
+#ノート編集
 @app.route('/note/<note_id>')
 def edit_note(note_id):
     if 'user' not in session: return redirect(url_for('login'))
@@ -362,6 +354,7 @@ def edit_note(note_id):
     else:
         return "エラー: 指定されたノートが見つかりません。", 404
 
+#ノート更新
 @app.route('/update_note/<note_id>', methods=['POST'])
 def update_note(note_id):
     if 'user' not in session: return redirect(url_for('login'))
@@ -383,6 +376,7 @@ def update_note(note_id):
     })
     return redirect(url_for('archive_tags'))
 
+#ノート削除
 @app.route('/delete_note/<note_id>', methods=['POST'])
 def delete_note(note_id):
     if 'user' not in session: return redirect(url_for('login'))
@@ -402,6 +396,7 @@ def delete_note(note_id):
     flash('ノートを削除しました。', 'success')
     return redirect(url_for('archive_tags'))
 
+#復習問題再生成
 @app.route('/regenerate_quiz/<note_id>', methods=['POST'])
 def regenerate_quiz(note_id):
     if 'user' not in session: return redirect(url_for('login'))
@@ -431,9 +426,9 @@ def regenerate_quiz(note_id):
 if __name__ == '__main__':
     app.run(debug=True)
 
+#ログアウト
 @app.route('/logout')
 def logout():
-    #ログアウト
     session.clear()
     flash('ログアウトしました。', 'info')
     return redirect(url_for('login'))

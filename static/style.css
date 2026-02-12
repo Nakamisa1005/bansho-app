@@ -1,19 +1,18 @@
 @charset "UTF-8";
 
-/* =========================================
-   基本設定 (Base Styles)
-   ========================================= */
+/*基本設定 */
 :root {
-    --bg-color: #FEFAE3;
     /* 全体の背景色（クリーム色） */
+    --bg-color: #FEFAE3;
+    /* ヘッダーの背景色（深緑） */
     --primary-color: #0E6721;
-    /* メインカラー（深緑） */
-    --accent-yellow: #fff799;
     /* マーカー黄色 */
-    --accent-red: #ffccd5;
+    --accent-yellow: #fff799;
     /* マーカー赤色 */
+    --accent-red: #ffccd5;
+    /* テキスト色 */
     --text-color: #333333;
-    /* 文字色 */
+    /* 白 */
     --white: #ffffff;
 }
 
@@ -34,9 +33,7 @@ select {
     line-height: 1.6;
 }
 
-/* =========================================
-   レイアウト共通 (Layout)
-   ========================================= */
+/* レイアウト共通 */
 body {
     display: flex;
     flex-direction: column;
@@ -47,7 +44,6 @@ main {
     flex: 1;
     width: 90%;
     max-width: 1000px;
-    /* コンテンツの最大幅を制限して見やすく */
     margin: 40px auto;
     padding: 0 20px;
     box-sizing: border-box;
@@ -57,9 +53,7 @@ section {
     margin-bottom: 60px;
 }
 
-/* =========================================
-   ヘッダー & ナビゲーション (Header & Nav)
-   ========================================= */
+/* ヘッダー & ナビゲーション */
 header {
     background-color: var(--primary-color);
     padding: 20px 0;
@@ -119,7 +113,7 @@ header {
 
 .nav-item a:hover {
     color: var(--primary-color);
-    /* マーカー風ホバーエフェクト */
+    /* マーカー風 */
     background: linear-gradient(transparent 60%, var(--accent-yellow) 60%);
 }
 
@@ -141,9 +135,7 @@ header {
     font-weight: bold;
 }
 
-/* =========================================
-   コンポーネント (Components)
-   ========================================= */
+/* コンポーネント */
 
 /* タイトルとマーカー */
 .section-title {
@@ -176,6 +168,11 @@ header {
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    max-width: 480px; margin: 0 auto;
 }
 
 /* ログイン時・新規登録時のフォームラベル */
@@ -223,7 +220,6 @@ textarea:focus {
     transition: opacity 0.3s, transform 0.1s;
     text-align: center;
     border: 2px solid var(--primary-color);
-    /* 枠線も追加 */
 }
 
 .action-button:hover {
@@ -280,11 +276,9 @@ input[type="file"] {
     display: none;
 }
 
-/* =========================================
-   ページ個別スタイル
-   ========================================= */
+/* ページ個別スタイル */
 
-/* --- アーカイブ (Grid View) --- */
+/* アーカイブ */
 .search-container {
     text-align: center;
     margin-bottom: 40px;
@@ -312,6 +306,11 @@ input[type="file"] {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 30px;
     justify-content: center;
+}
+
+.no-content-text {
+    text-align:center;
+    width:100%;
 }
 
 .tag-card {
@@ -345,16 +344,17 @@ input[type="file"] {
     font-size: 1.2rem;
 }
 
-/* --- 生成結果・詳細 (Result View) --- */
+/* 生成結果・詳細 */
 .ai-result-pre {
     background-color: var(--white);
     border: 2px solid var(--primary-color);
-    /* ノートっぽく */
     border-radius: 5px;
     padding: 20px;
     white-space: pre-wrap;
     font-family: inherit;
     font-size: 1rem;
+    max-height: 150px;
+    overflow-y: auto;
 }
 
 .quiz-container {
@@ -365,14 +365,17 @@ input[type="file"] {
 .quiz-item {
     background-color: var(--white);
     border: 1px solid #ccc;
-    /* クイズは少し控えめな枠 */
     border-radius: 10px;
     padding: 20px;
     border-left: 5px solid var(--primary-color);
-    /* 左にアクセント */
 }
 
-/* --- フッター --- */
+.without-save {
+    color: #666;
+    font-size: 0.9rem;
+    text-decoration: underline;
+}
+/* フッター */
 footer {
     background-color: var(--primary-color);
     padding: 20px;
@@ -384,9 +387,7 @@ footer p {
     color: var(--white);
 }
 
-/* =========================================
-   スマホ対応 (Responsive)
-   ========================================= */
+/* スマホ対応 */
 @media (max-width: 768px) {
     .header-title {
         font-size: 2rem;
