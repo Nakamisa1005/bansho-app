@@ -168,11 +168,6 @@ header {
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;
-    text-align: center;
-    border: none;
-    background: transparent;
-    box-shadow: none;
-    max-width: 480px; margin: 0 auto;
 }
 
 /* ログイン時・新規登録時のフォームラベル */
@@ -308,11 +303,6 @@ input[type="file"] {
     justify-content: center;
 }
 
-.no-content-text {
-    text-align:center;
-    width:100%;
-}
-
 .tag-card {
     display: block;
     text-decoration: none;
@@ -353,8 +343,6 @@ input[type="file"] {
     white-space: pre-wrap;
     font-family: inherit;
     font-size: 1rem;
-    max-height: 150px;
-    overflow-y: auto;
 }
 
 .quiz-container {
@@ -370,11 +358,6 @@ input[type="file"] {
     border-left: 5px solid var(--primary-color);
 }
 
-.without-save {
-    color: #666;
-    font-size: 0.9rem;
-    text-decoration: underline;
-}
 /* フッター */
 footer {
     background-color: var(--primary-color);
